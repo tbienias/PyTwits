@@ -1,14 +1,6 @@
 from collections import namedtuple
 
 
-User = namedtuple('User', ['id', 'username', 'name', 'avatar_url',
-                           'avatar_url_ssl', 'join_date',
-                           'official', 'identity',
-                           'classification', 'followers',
-                           'following', 'ideas',
-                           'watchlist_stocks_count', 'like_count'])
-
-
 Cursor = namedtuple('Cursor', ['more', 'since', 'max'])
 
 
@@ -25,3 +17,17 @@ class Message(object):
         self.reshares = attributes.get('reshares', {})
         self.likes = attributes.get('likes', {})
 
+
+Symbol = namedtuple('Symbol', ['id', 'symbol', 'title', 'aliases',
+                               'is_following', 'watchlist_count'])
+
+
+User = namedtuple('User', ['id', 'username', 'name', 'avatar_url',
+                           'avatar_url_ssl', 'join_date',
+                           'official', 'identity',
+                           'classification', 'followers',
+                           'following', 'ideas',
+                           'watchlist_stocks_count', 'like_count'])
+
+
+Watchlist = namedtuple('Watchlist', ['id', 'name', 'updated_at', 'created_at'])
