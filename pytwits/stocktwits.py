@@ -38,25 +38,34 @@ class StockTwits(object):
             messages.append(Message(message_attributes=message))
         return messages
 
-    JSON_OBJECTS = {'user': User,
-                    'cursor': Cursor,
-                    'messages': message_list_helper.__get__(object)}
+    JSON_OBJECTS = {'cursor': Cursor,
+                    'message': Message,
+                    'messages': message_list_helper.__get__(object),
+                    'parent': Message,
+                    'symbol': Symbol,
+                    'user': User,
+                    'watchlist': Watchlist}
 
     def streams(self, path, *args, **kwargs):
         if path not in API_PATH:
             raise InvalidInvocation()
+
         p = {key: kwargs[key] for key in kwargs.keys() & {'id', 'sector_path'}}
         api_path = API_PATH[path].format(**p)
         url = BASE_URL.format(api_path)
+
         all(map(kwargs.pop, p))  # Remove id and sector_path from kwargs
+        kwargs['access_token'] = self.access_token
         json_response = self._requestor.get_json(url, kwargs)
         del json_response['response']
+
         json_objects = []
         for k in json_response:
             if isinstance(json_response[k], list):
                 json_objects.append(self.JSON_OBJECTS[k](json_response[k]))
             else:
                 json_objects.append(self.JSON_OBJECTS[k](**json_response[k]))
+
         return json_objects
 
     def user(self, id, since=None, max=None, limit=None, filter=None):

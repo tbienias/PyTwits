@@ -18,6 +18,9 @@ class Message(object):
         self.likes = attributes.get('likes', {})
 
 
+#Parent = namedtuple('Parent', ['id', 'body', ''])
+
+
 Symbol = namedtuple('Symbol', ['id', 'symbol', 'title', 'aliases',
                                'is_following', 'watchlist_count'])
 
