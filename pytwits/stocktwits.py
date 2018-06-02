@@ -2,6 +2,7 @@
 
 from .classes import Cursor, Message, User, Symbol, Watchlist
 from .const import API_PATH, BASE_URL
+from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
 
@@ -29,6 +30,34 @@ class StockTwits(object):
         Provides the interface for REST-API requests.
 
         """
+
+    @staticmethod
+    def message_list_helper(json_messages):
+        messages = []
+        for message in json_messages:
+            messages.append(Message(message_attributes=message))
+        return messages
+
+    JSON_OBJECTS = {'user': User,
+                    'cursor': Cursor,
+                    'messages': message_list_helper.__get__(object)}
+
+    def streams(self, path, *args, **kwargs):
+        if path not in API_PATH:
+            raise InvalidInvocation()
+        p = {key: kwargs[key] for key in kwargs.keys() & {'id', 'sector_path'}}
+        api_path = API_PATH[path].format(**p)
+        url = BASE_URL.format(api_path)
+        all(map(kwargs.pop, p))  # Remove id and sector_path from kwargs
+        json_response = self._requestor.get_json(url, kwargs)
+        del json_response['response']
+        json_objects = []
+        for k in json_response:
+            if isinstance(json_response[k], list):
+                json_objects.append(self.JSON_OBJECTS[k](json_response[k]))
+            else:
+                json_objects.append(self.JSON_OBJECTS[k](**json_response[k]))
+        return json_objects
 
     def user(self, id, since=None, max=None, limit=None, filter=None):
         """Wrapper for user function stream.

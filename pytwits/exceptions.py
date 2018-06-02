@@ -5,6 +5,10 @@ class PytwitsException(Exception):
     """Base exception class for exceptions that occur within this package."""
 
 
+class InvalidInvocation(PytwitsException):
+    """Indicate that the code to execute cannot be completed."""
+
+
 class ResponseException(PytwitsException):
     """Indicate that there was an error with the completed HTTP request."""
 
