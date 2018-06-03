@@ -41,7 +41,7 @@ class StockTwits(object):
     def message_list_helper(self, json_messages):
         messages = []
         for message in json_messages:
-            messages.append(Message(message_attributes=message))
+            messages.append(Message(**message))
         return messages
 
     def query_helper(self, path, api_extensions, kwargs):

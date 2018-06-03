@@ -1,36 +1,44 @@
-from collections import namedtuple
 
 
-Cursor = namedtuple('Cursor', ['more', 'since', 'max'])
+class Cursor(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
 
 
 class Message(object):
 
     def __init__(self, *args, **kwargs):
-        attributes = kwargs.get('message_attributes')
-        self.__dict__.update(attributes)
+        self.__dict__.update(kwargs)
 
-        # Add attributes, which might be missing
-        self.symbols = attributes.get('symbols', [])
-        self.conversation = attributes.get('conversation', {})
-        self.links = attributes.get('links', [])
-        self.reshares = attributes.get('reshares', {})
-        self.likes = attributes.get('likes', {})
-
-
-#Parent = namedtuple('Parent', ['id', 'body', ''])
+        # Add attributes, which might be missing due to no authentication
+        self.symbols = kwargs.get('symbols', [])
+        self.conversation = kwargs.get('conversation', {})
+        self.links = kwargs.get('links', [])
+        self.reshares = kwargs.get('reshares', {})
+        self.likes = kwargs.get('likes', {})
 
 
-Symbol = namedtuple('Symbol', ['id', 'symbol', 'title', 'aliases',
-                               'is_following', 'watchlist_count'])
+class Symbol(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
 
 
-User = namedtuple('User', ['id', 'username', 'name', 'avatar_url',
-                           'avatar_url_ssl', 'join_date',
-                           'official', 'identity',
-                           'classification', 'followers',
-                           'following', 'ideas',
-                           'watchlist_stocks_count', 'like_count'])
+class User(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
+
+        # Add attributes, which might be missing due to no authentication
+        self.is_blocking = kwargs.get('is_blocking', None)
+        self.is_follower = kwargs.get('is_follower', None)
+        self.is_following = kwargs.get('is_following', None)
+        self.is_muting = kwargs.get('is_muting', None)
+        self.is_subscribed = kwargs.get('is_subscribed', None)
 
 
-Watchlist = namedtuple('Watchlist', ['id', 'name', 'updated_at', 'created_at'])
+class Watchlist(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
