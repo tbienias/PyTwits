@@ -33,7 +33,7 @@ class StockTwits(object):
                                'message': Message,
                                'messages': self.__message_list_helper,
                                'parent': Message,
-                             # 'results': self.result_list_helper,
+                               'results': self.__result_list_helper,
                                'symbol': Symbol,
                                'user': User,
                                'watchlist': Watchlist}
@@ -45,13 +45,23 @@ class StockTwits(object):
             messages.append(Message(**message))
         return messages
 
-    def __query_helper(self, path, api_extensions, kwargs):
+    def __result_list_helper(self, json_results):
+        """Heler for dealing with lists of results."""
+        objects = []
+        for result in json_results:
+            type = result['type']
+            del result['type']
+            objects.append(self.__JSON_OBJECTS[type](**result))
+        return objects
+
+    def __query_helper(self, path, kwargs, api_extensions=None):
         """Helper which is basically used by every public interface function
         doing all the internal magic."""
         if path not in API_PATH:
             raise InvalidInvocation()
-
-        api_path = API_PATH[path].format(**api_extensions)
+        api_path = API_PATH[path]
+        if api_extensions is not None:
+            api_path = api_path.format(**api_extensions)
         url = BASE_URL.format(api_path)
 
         kwargs['access_token'] = self.__access_token
@@ -65,6 +75,9 @@ class StockTwits(object):
             else:
                 json_objects.append(self.__JSON_OBJECTS[k](**json_response[k]))
 
+        if len(json_objects) == 1:
+            return json_objects[0]
+
         return json_objects
 
     def streams(self, path, *args, **kwargs):
@@ -72,4 +85,9 @@ class StockTwits(object):
         StockTwits API."""
         p = {key: kwargs[key] for key in kwargs.keys() & {'id', 'sector_path'}}
         all(map(kwargs.pop, p))  # Remove id and sector_path from kwargs
-        return self.__query_helper(path, p, kwargs)
+        return self.__query_helper(path, kwargs, p)
+
+    def search(self, path, *args, **kwargs):
+        """This function provides all the search functionality offered by the
+        StockTwits API."""
+        return self.__query_helper(path, kwargs)
