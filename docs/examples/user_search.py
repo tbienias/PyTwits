@@ -6,7 +6,7 @@ import pytwits
 
 def main():
 
-    access_token = 'Token'  # This would also work without passing token.
+    access_token = 'TOKEN'  # This would also work without passing token.
     stocktwits = pytwits.StockTwits(access_token=access_token)
 
     users = stocktwits.search(path='search/users',
