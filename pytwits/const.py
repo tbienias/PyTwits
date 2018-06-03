@@ -6,6 +6,8 @@ import os
 __version__ = '0.1'
 
 API_PATH = {
+
+    # Streams API paths
     'authorize':            'api/2/oauth/authorize',
     'token':                'api/2/oauth/token',
     'user':                 'api/2/streams/user/{id}.json',
@@ -27,7 +29,12 @@ API_PATH = {
     'symbols':              'api/2/streams/symbols.json',
     'trending':             'api/2/streams/trending.json',
     'sectors':              'api/2/streams/sectors/{sector_path}.json',
-    'conversation':         'api/2/streams/conversation/{id}.json'
+    'conversation':         'api/2/streams/conversation/{id}.json',
+
+    # Search API paths
+    'search':               'api/2/search.json',
+    'search/symbols':       'api/2/search/symbols.json',
+    'search/users':         'api/2/search/users.json'
 }
 
 BASE_URL = 'https://api.stocktwits.com/{}'
