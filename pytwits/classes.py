@@ -1,3 +1,5 @@
+"""Provides all JSON objects that can be retrieved by the API as Python
+objects."""
 
 
 class Cursor(object):
