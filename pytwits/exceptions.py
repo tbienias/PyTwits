@@ -34,3 +34,7 @@ class NotFound(ResponseException):
 class Unauthorized(ResponseException):
     """Indicate that the request used an invalid access token or none at
     all."""
+
+
+class Unprocessable(ResponseException):
+    """Indicate that the request is a duplicate."""

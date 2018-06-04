@@ -1,7 +1,7 @@
 """ Provide the StockTwits class. """
 
-from .classes import Cursor, Message, User, Symbol, Watchlist
-from .const import API_PATH, BASE_URL
+from .classes import Cursor, Entities, Message, User, Source, Symbol, Watchlist
+from .const import API_PATH, BASE_URL, HTTP_REQUEST
 from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
@@ -30,11 +30,14 @@ class StockTwits(object):
         """
 
         self.__JSON_OBJECTS = {'cursor': Cursor,
+                               'entities': Entities,
                                'message': Message,
                                'messages': self.__message_list_helper,
                                'parent': Message,
                                'results': self.__result_list_helper,
+                               'source': Source,
                                'symbol': Symbol,
+                               'symbols': self.__symbol_list_helper,
                                'user': User,
                                'watchlist': Watchlist}
 
@@ -54,6 +57,13 @@ class StockTwits(object):
             objects.append(self.__JSON_OBJECTS[type](**result))
         return objects
 
+    def __symbol_list_helper(self, json_symbols):
+        """Helper for dealing with lists of symbols."""
+        symbols = []
+        for symbol in json_symbols:
+            symbols.append(Message(**symbol))
+        return symbols
+
     def __query_helper(self, path, kwargs, api_extensions=None):
         """Helper which is basically used by every public interface function
         doing all the internal magic."""
@@ -65,7 +75,10 @@ class StockTwits(object):
         url = BASE_URL.format(api_path)
 
         kwargs['access_token'] = self.__access_token
-        json_response = self.__requestor.get_json(url, kwargs)
+        if 'GET' == HTTP_REQUEST[path]:
+            json_response = self.__requestor.get_json(url, kwargs)
+        elif 'POST' == HTTP_REQUEST[path]:
+            json_response = self.__requestor.post_json(url, kwargs)
         del json_response['response']
 
         json_objects = []
@@ -91,3 +104,10 @@ class StockTwits(object):
         """This function provides all the search functionality offered by the
         StockTwits API."""
         return self.__query_helper(path, kwargs)
+
+    def messages(self, path, *args, **kwargs):
+        """This function provides all the messaging functionality offered by
+        the StockTwits API."""
+        p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
+        all(map(kwargs.pop, p))  # Remove id from kwargs
+        return self.__query_helper(path, kwargs, p)
