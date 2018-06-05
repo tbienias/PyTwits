@@ -34,9 +34,53 @@ API_PATH = {
     # Search API paths
     'search':               'api/2/search.json',
     'search/symbols':       'api/2/search/symbols.json',
-    'search/users':         'api/2/search/users.json'
+    'search/users':         'api/2/search/users.json',
+
+    # Messags API paths
+    'create':               'api/2/messages/create.json',
+    'show':                 'api/2/messages/show/{id}.json',
+    'like':                 'api/2/messages/like.json',
+    'unlike':               'api/2/messages/unlike.json'
 }
 
 BASE_URL = 'https://api.stocktwits.com/{}'
+
+HTTP_REQUEST = {
+
+    # Streams HTTP requests
+    'authorize':            'GET',
+    'token':                'GET',
+    'user':                 'GET',
+    'symbol':               'GET',
+    'home':                 'GET',
+    'friends':              'GET',
+    'mentions':             'GET',
+    'direct':               'GET',
+    'direct_sent':          'GET',
+    'direct_received':      'GET',
+    'watchlist':            'GET',
+    'all':                  'GET',
+    'charts':               'GET',
+    'equities':             'GET',
+    'forex':                'GET',
+    'futures':              'GET',
+    'private_companies':    'GET',
+    'suggested':            'GET',
+    'symbols':              'GET',
+    'trending':             'GET',
+    'sectors':              'GET',
+    'conversation':         'GET',
+
+    # Search HTTP requests
+    'search':               'GET',
+    'search/symbols':       'GET',
+    'search/users':         'GET',
+
+    # Messags HTTP requests
+    'create':               'POST',
+    'show':                 'GET',
+    'like':                 'POST',
+    'unlike':               'POST'
+}
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))

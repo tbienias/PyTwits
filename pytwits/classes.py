@@ -8,6 +8,12 @@ class Cursor(object):
         self.__dict__.update(kwargs)
 
 
+class Entities(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class Message(object):
 
     def __init__(self, *args, **kwargs):
@@ -19,6 +25,12 @@ class Message(object):
         self.links = kwargs.get('links', [])
         self.reshares = kwargs.get('reshares', {})
         self.likes = kwargs.get('likes', {})
+
+
+class Source(object):
+
+    def __init__(self, *args, **kwargs):
+        self.__dict__.update(kwargs)
 
 
 class Symbol(object):
