@@ -79,7 +79,8 @@ class StockTwits(object):
             json_response = self.__requestor.get_json(url, kwargs)
         elif 'POST' == HTTP_REQUEST[path]:
             json_response = self.__requestor.post_json(url, kwargs)
-        del json_response['response']
+        json_response.pop('response', None)
+        json_response.pop('errors', None)
 
         json_objects = []
         for k in json_response:
@@ -108,6 +109,9 @@ class StockTwits(object):
     def messages(self, path, *args, **kwargs):
         """This function provides all the messaging functionality offered by
         the StockTwits API."""
-        p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
-        all(map(kwargs.pop, p))  # Remove id from kwargs
+        if "{id}" in API_PATH[path]:
+            p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
+            all(map(kwargs.pop, p))  # Remove id from kwargs
+        else:
+            p = None
         return self.__query_helper(path, kwargs, p)
