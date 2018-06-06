@@ -101,9 +101,11 @@ class StockTwits(object):
         json_objects = []
         for key in json_response:
             if isinstance(json_response[key], list):
-                json_objects.append(self.__JSON_OBJECTS[key](json_response[key]))
+                json_objects.append(
+                    self.__JSON_OBJECTS[key](json_response[key]))
             else:
-                json_objects.append(self.__JSON_OBJECTS[key](**json_response[key]))
+                json_objects.append(
+                    self.__JSON_OBJECTS[key](**json_response[key]))
 
         if len(json_objects) == 1:
             return json_objects[0]
