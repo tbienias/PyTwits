@@ -66,6 +66,12 @@ GRAPH_API_PATH = {
     'symbols':           APIPath(path='api/2/graph/symbols.json', request_type='GET'),
 }
 
+FRIENDSHIPS_API_PATH = {
+
+    'create':            APIPath(path='api/2/friendships/create/{id}.json', request_type='POST'),
+    'destroy':           APIPath(path='api/2/friendships/destroy/{id}.json', request_type='POST'),
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
