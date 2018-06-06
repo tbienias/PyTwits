@@ -1,4 +1,5 @@
-"""Provides a basic example of retrieving a list of muted users from StockTwits."""
+"""Provides a basic example of retrieving a list of muted users from
+StockTwits."""
 
 import pytwits
 

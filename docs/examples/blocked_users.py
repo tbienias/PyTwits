@@ -1,4 +1,5 @@
-"""Provides a basic example of retrieving a list of blocked users from StockTwits."""
+"""Provides a basic example of retrieving a list of blocked users from
+StockTwits."""
 
 import pytwits
 

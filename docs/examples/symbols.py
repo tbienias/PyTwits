@@ -1,4 +1,5 @@
-"""Provides a basic example of retrieving a list of symbols you are following from StockTwits."""
+"""Provides a basic example of retrieving a list of symbols you are
+following from StockTwits."""
 
 import pytwits
 
