@@ -1,5 +1,5 @@
-"""Provides a basic example of retrieving the latest message containing an image
-and displays it."""
+"""Provides a basic example of retrieving the latest message containing an
+image and displays it."""
 
 from io import BytesIO
 from PIL import Image
