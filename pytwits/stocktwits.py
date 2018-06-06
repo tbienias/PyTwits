@@ -1,7 +1,8 @@
 """ Provide the StockTwits class. """
 
 from .classes import Cursor, Entities, Message, User, Source, Symbol, Watchlist
-from .const import API_PATH, BASE_URL, HTTP_REQUEST
+from .const import (GRAPH_API_PATH, MESSAGES_API_PATH, SEARCH_API_PATH,
+                    STREAMS_API_PATH, BASE_URL)
 from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
@@ -39,6 +40,7 @@ class StockTwits(object):
                                'symbol': Symbol,
                                'symbols': self.__symbol_list_helper,
                                'user': User,
+                               'users': self.__user_list_helper,
                                'watchlist': Watchlist}
 
     def __message_list_helper(self, json_messages):
@@ -64,30 +66,35 @@ class StockTwits(object):
             symbols.append(Message(**symbol))
         return symbols
 
-    def __query_helper(self, path, kwargs, api_extensions=None):
+    def __user_list_helper(self, json_users):
+        """Helper for dealing with lists of users."""
+        users = []
+        for user in json_users:
+            users.append(User(**user))
+        return users
+
+    def __query_helper(self, api_path, kwargs, api_extensions=None):
         """Helper which is basically used by every public interface function
         doing all the internal magic."""
-        if path not in API_PATH:
-            raise InvalidInvocation()
-        api_path = API_PATH[path]
+        api_path_extended = api_path.path
         if api_extensions is not None:
-            api_path = api_path.format(**api_extensions)
-        url = BASE_URL.format(api_path)
+            api_path_extended = api_path_extended.format(**api_extensions)
+        url = BASE_URL.format(api_path_extended)
 
         kwargs['access_token'] = self.__access_token
-        if 'GET' == HTTP_REQUEST[path]:
+        if 'GET' == api_path.request_type:
             json_response = self.__requestor.get_json(url, kwargs)
-        elif 'POST' == HTTP_REQUEST[path]:
+        elif 'POST' == api_path.request_type:
             json_response = self.__requestor.post_json(url, kwargs)
-        json_response.pop('response', None)
-        json_response.pop('errors', None)
+        for key in ['response', 'errors']:
+            json_response.pop(key, None)
 
         json_objects = []
-        for k in json_response:
-            if isinstance(json_response[k], list):
-                json_objects.append(self.__JSON_OBJECTS[k](json_response[k]))
+        for key in json_response:
+            if isinstance(json_response[key], list):
+                json_objects.append(self.__JSON_OBJECTS[key](json_response[key]))
             else:
-                json_objects.append(self.__JSON_OBJECTS[k](**json_response[k]))
+                json_objects.append(self.__JSON_OBJECTS[key](**json_response[key]))
 
         if len(json_objects) == 1:
             return json_objects[0]
@@ -97,21 +104,38 @@ class StockTwits(object):
     def streams(self, path, *args, **kwargs):
         """This function provides all the stream functionality offered by the
         StockTwits API."""
+        if path not in STREAMS_API_PATH:
+            raise InvalidInvocation()
+        api_path = STREAMS_API_PATH[path]
         p = {key: kwargs[key] for key in kwargs.keys() & {'id', 'sector_path'}}
         all(map(kwargs.pop, p))  # Remove id and sector_path from kwargs
-        return self.__query_helper(path, kwargs, p)
+        return self.__query_helper(api_path, kwargs, p)
 
     def search(self, path, *args, **kwargs):
         """This function provides all the search functionality offered by the
         StockTwits API."""
-        return self.__query_helper(path, kwargs)
+        if path not in SEARCH_API_PATH:
+            raise InvalidInvocation()
+        api_path = SEARCH_API_PATH[path]
+        return self.__query_helper(api_path, kwargs)
 
     def messages(self, path, *args, **kwargs):
         """This function provides all the messaging functionality offered by
         the StockTwits API."""
-        if "{id}" in API_PATH[path]:
+        if path not in MESSAGES_API_PATH:
+            raise InvalidInvocation()
+        api_path = MESSAGES_API_PATH[path]
+        if "{id}" in api_path.path:
             p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
             all(map(kwargs.pop, p))  # Remove id from kwargs
         else:
             p = None
-        return self.__query_helper(path, kwargs, p)
+        return self.__query_helper(api_path, kwargs, p)
+
+    def graph(self, path, *args, **kwargs):
+        """This function provides all the graph functionality offered by
+        the StockTwits API."""
+        if path not in GRAPH_API_PATH:
+            raise InvalidInvocation()
+        api_path = GRAPH_API_PATH[path]
+        return self.__query_helper(api_path, kwargs)
