@@ -2,7 +2,8 @@
 
 from .classes import Cursor, Entities, Message, User, Source, Symbol, Watchlist
 from .const import (FRIENDSHIPS_API_PATH, GRAPH_API_PATH, MESSAGES_API_PATH,
-                    SEARCH_API_PATH, STREAMS_API_PATH, BASE_URL)
+                    SEARCH_API_PATH, STREAMS_API_PATH, WATCHLISTS_API_PATH,
+                    BASE_URL)
 from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
@@ -41,7 +42,8 @@ class StockTwits(object):
                                'symbols': self.__symbol_list_helper,
                                'user': User,
                                'users': self.__user_list_helper,
-                               'watchlist': Watchlist}
+                               'watchlist': Watchlist,
+                               'watchlists': self.__watchlist_list_helper}
 
     def __message_list_helper(self, json_messages):
         """Helper for dealing with lists of messages."""
@@ -72,6 +74,13 @@ class StockTwits(object):
         for user in json_users:
             users.append(User(**user))
         return users
+
+    def __watchlist_list_helper(self, json_watchlists):
+        """Helper for dealing with lists of watchlists."""
+        watchlists = []
+        for watchlist in json_watchlists:
+            watchlists.append(Watchlist(**watchlist))
+        return watchlists
 
     def __query_helper(self, api_path, kwargs, api_extensions=None):
         """Helper which is basically used by every public interface function
@@ -146,6 +155,19 @@ class StockTwits(object):
         if path not in FRIENDSHIPS_API_PATH:
             raise InvalidInvocation()
         api_path = FRIENDSHIPS_API_PATH[path]
+        if "{id}" in api_path.path:
+            p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
+            all(map(kwargs.pop, p))  # Remove id from kwargs
+        else:
+            p = None
+        return self.__query_helper(api_path, kwargs, p)
+
+    def watchlists(self, path, *args, **kwargs):
+        """This function provides all the watchlists functionality
+        offered by the StockTwits API."""
+        if path not in WATCHLISTS_API_PATH:
+            raise InvalidInvocation()
+        api_path = WATCHLISTS_API_PATH[path]
         if "{id}" in api_path.path:
             p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
             all(map(kwargs.pop, p))  # Remove id from kwargs

@@ -72,6 +72,17 @@ FRIENDSHIPS_API_PATH = {
     'destroy':           APIPath(path='api/2/friendships/destroy/{id}.json', request_type='POST'),
 }
 
+WATCHLISTS_API_PATH = {
+
+    'watchlists':        APIPath(path='api/2/watchlists.json', request_type='GET'),
+    'create':            APIPath(path='api/2/watchlists/create.json', request_type='POST'),
+    'update':            APIPath(path='api/2/watchlists/update/{id}.json', request_type='POST'),
+    'destroy':           APIPath(path='api/2/watchlists/destroy/{id}.json', request_type='POST'),
+    'show':              APIPath(path='api/2/watchlists/show/{id}.json', request_type='GET'),
+    'symbols/create':    APIPath(path='api/2/watchlists/{id}/symbols/create.json', request_type='POST'),
+    'symbols/destroy':   APIPath(path='api/2/watchlists/{id}/symbols/destroy.json', request_type='POST'),
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
