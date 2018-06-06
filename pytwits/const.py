@@ -83,6 +83,12 @@ WATCHLISTS_API_PATH = {
     'symbols/destroy':   APIPath(path='api/2/watchlists/{id}/symbols/destroy.json', request_type='POST'),
 }
 
+BLOCKS_API_PATH = {
+
+    'create':            APIPath(path='api/2/blocks/create/{id}.json', request_type='POST'),
+    'destroy':           APIPath(path='api/2/blocks/destroy/{id}.json', request_type='POST')
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
