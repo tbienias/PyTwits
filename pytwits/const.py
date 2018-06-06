@@ -89,6 +89,12 @@ BLOCKS_API_PATH = {
     'destroy':           APIPath(path='api/2/blocks/destroy/{id}.json', request_type='POST')
 }
 
+MUTES_API_PATH = {
+
+    'create':            APIPath(path='api/2/mutes/create/{id}.json', request_type='POST'),
+    'destroy':           APIPath(path='api/2/mutes/destroy/{id}.json', request_type='POST')
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))

@@ -2,8 +2,8 @@
 
 from .classes import Cursor, Entities, Message, User, Source, Symbol, Watchlist
 from .const import (BLOCKS_API_PATH, FRIENDSHIPS_API_PATH, GRAPH_API_PATH,
-                    MESSAGES_API_PATH, SEARCH_API_PATH, STREAMS_API_PATH,
-                    WATCHLISTS_API_PATH, BASE_URL)
+                    MESSAGES_API_PATH, MUTES_API_PATH, SEARCH_API_PATH,
+                    STREAMS_API_PATH, WATCHLISTS_API_PATH, BASE_URL)
 from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
@@ -183,6 +183,19 @@ class StockTwits(object):
         if path not in BLOCKS_API_PATH:
             raise InvalidInvocation()
         api_path = BLOCKS_API_PATH[path]
+        if "{id}" in api_path.path:
+            p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
+            all(map(kwargs.pop, p))  # Remove id from kwargs
+        else:
+            p = None
+        return self.__query_helper(api_path, kwargs, p)
+
+    def mutes(self, path, *args, **kwargs):
+        """This function provides all the mutes functionality
+        offered by the StockTwits API."""
+        if path not in MUTES_API_PATH:
+            raise InvalidInvocation()
+        api_path = MUTES_API_PATH[path]
         if "{id}" in api_path.path:
             p = {key: kwargs[key] for key in kwargs.keys() & {'id'}}
             all(map(kwargs.pop, p))  # Remove id from kwargs
