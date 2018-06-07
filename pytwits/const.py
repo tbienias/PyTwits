@@ -107,6 +107,12 @@ TRENDING_API_PATH = {
     'symbols/equities':  APIPath(path='api/2/trending/symbols/equities.json', request_type='GET')
 }
 
+DELETIONS_API_PATH = {
+
+    'messages':          APIPath(path='api/2/deletions/messages.json', request_type='GET'),
+    'users':             APIPath(path='api/2/deletions/users.json', request_type='GET')
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
