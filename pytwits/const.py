@@ -95,6 +95,12 @@ MUTES_API_PATH = {
     'destroy':           APIPath(path='api/2/mutes/destroy/{id}.json', request_type='POST')
 }
 
+ACCOUNT_API_PATH = {
+
+    'verify':            APIPath(path='api/2/account/verify.json', request_type='GET'),
+    'update':            APIPath(path='api/2/account/update.json', request_type='POST')
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
