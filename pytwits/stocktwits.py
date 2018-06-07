@@ -3,8 +3,8 @@
 from .classes import Cursor, Entities, Message, User, Source, Symbol, Watchlist
 from .const import (ACCOUNT_API_PATH, BLOCKS_API_PATH, FRIENDSHIPS_API_PATH,
                     GRAPH_API_PATH, MESSAGES_API_PATH, MUTES_API_PATH,
-                    SEARCH_API_PATH, STREAMS_API_PATH, WATCHLISTS_API_PATH,
-                    BASE_URL)
+                    SEARCH_API_PATH, STREAMS_API_PATH, TRENDING_API_PATH,
+                    WATCHLISTS_API_PATH, BASE_URL)
 from .exceptions import InvalidInvocation
 from .requestor import Requestor
 
@@ -210,4 +210,12 @@ class StockTwits(object):
         if path not in ACCOUNT_API_PATH:
             raise InvalidInvocation()
         api_path = ACCOUNT_API_PATH[path]
+        return self.__query_helper(api_path, kwargs)
+
+    def trending(self, path, *args, **kwargs):
+        """This function provides all the trending functionality
+        offered by the StockTwits API."""
+        if path not in TRENDING_API_PATH:
+            raise InvalidInvocation()
+        api_path = TRENDING_API_PATH[path]
         return self.__query_helper(api_path, kwargs)
