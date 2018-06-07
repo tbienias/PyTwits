@@ -101,6 +101,12 @@ ACCOUNT_API_PATH = {
     'update':            APIPath(path='api/2/account/update.json', request_type='POST')
 }
 
+TRENDING_API_PATH = {
+
+    'symbols':           APIPath(path='api/2/trending/symbols.json', request_type='GET'),
+    'symbols/equities':  APIPath(path='api/2/trending/symbols/equities.json', request_type='GET')
+}
+
 BASE_URL = 'https://api.stocktwits.com/{}'
 
 TIMEOUT = float(os.environ.get('pytwits_timeout', 16))
